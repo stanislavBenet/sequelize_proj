@@ -1,0 +1,13 @@
+1.sequelize init:config создает конфигурационный файл с подключением в ДБ
+2.sequelize db:create  Create database specified by configuration
+3.sequelize init:models   создает папку models с файлом index.js с автоимпортом всех моделей
+4.sequelize init:migrations создаем папку с миграциями
+5.npx sequelize model:generate --help команда помощи
+--name и --attributes обязательные параметры
+sequelize model:generate --name User --attributes firstName:string,lastName:string,email:string,password:text,birthday:dateonly,isMale:boolean
+создает модель с именем --name и миграции с атрибутами указанными имя:тип данных
+рефакторим миграцию и модель
+6.npx sequelize db:migrate 
+создаем таблицу в БД 
+sequelize db:migrate:undo:all  это удалит таблицу
+7.
