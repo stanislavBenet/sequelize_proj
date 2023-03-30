@@ -75,3 +75,6 @@ FindAll (
  where: {firstName:'Brad'}, покажет только кортеж с именеи Брэд
 
 )
+
+sudo systemctl status postgresql - статус постгреса
+

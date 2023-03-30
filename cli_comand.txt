@@ -35,3 +35,5 @@ kill -9 NUMBER
 
 
 npx sequelize model:generate --name User --attributes firstName:string,lastName:string,email:string,password:text,birthday:dateonly,isMale:boolean
+
+npx sequelize model:generate --name Task --attributes content:string,isDone:boolean,deadline:date
