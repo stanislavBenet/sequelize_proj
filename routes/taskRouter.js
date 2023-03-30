@@ -2,18 +2,18 @@ const { Router } = require('express');
 const TaskController = require('../controllers/task.controller');
 const { checkUser } = require('../middlewares/user.mw');
 const { checkTask } = require('../middlewares/task.mw');
+const paginate = require('../middlewares/paginate.mw');
 const taskRouter = Router();
 
-taskRouter.post('/', TaskController.createTask);
-taskRouter.get('/', TaskController.getUserTasks);
+taskRouter.get('/', paginate, TaskController.getAllTasks);
+
+taskRouter.post('/users/:idUser', checkUser, TaskController.createTask);
+taskRouter.get('/users/:idUser', checkUser, TaskController.getUserTasks);
 taskRouter.delete(
-  '/:idTask',
+  '/:idTask/users/:idUser',
   checkUser,
   checkTask,
   TaskController.deleteUserTask
 );
-
-taskRouter.get(':idTask', checkUser, TaskController.getOneUserTasks);
-taskRouter.patch('/:idTask', checkUser, TaskController.updateUserTask);
 
 module.exports = taskRouter;

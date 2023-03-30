@@ -1,6 +1,16 @@
 const { Task } = require('../models');
 const { Op } = require('sequelize');
 
+module.exports.getAllTasks = async (req, res, next) => {
+  try {
+    const { paginate = {} } = req;
+    const allTasks = await Task.findAll({ ...paginate });
+    res.status(200).send({ data: { allTasks } });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports.createTask = async (req, res, next) => {
   try {
     const { userInstance, body } = req;
@@ -13,8 +23,8 @@ module.exports.createTask = async (req, res, next) => {
 
 module.exports.getUserTasks = async (req, res, next) => {
   try {
-    const { userInstance } = req;
-    const tasks = await userInstance.getTasks();
+    const { userInstance, paginate = {} } = req;
+    const tasks = await userInstance.getTasks({ ...paginate });
     res.status(200).send({ data: tasks });
   } catch (error) {
     next(error);
@@ -41,8 +51,17 @@ module.exports.updateUserTask = async (req, res, next) => {
 
 module.exports.deleteUserTask = async (req, res, next) => {
   try {
-    const { taskInstance } = req;
-    const deleteTask = await taskInstance.destroy();
+    const {
+      userInstance,
+      taskInstance,
+      params: { idUser },
+    } = req;
+
+    const deleteTask = await taskInstance.destroy({
+      where: {
+        user_id: idUser,
+      },
+    });
     res.status(200).send({ data: taskInstance });
   } catch (error) {
     next(error);

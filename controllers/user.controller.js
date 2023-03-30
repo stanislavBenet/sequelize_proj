@@ -1,3 +1,4 @@
+const createError = require('http-errors');
 const { User } = require('../models');
 const { Op } = require('sequelize');
 
@@ -89,6 +90,10 @@ module.exports.getOneUser = async (req, res, next) => {
     } = req;
     const oneUser = await User.findByPk(idUser);
     res.status(200).send({ data: oneUser });
+    if (!oneUser) {
+      const errore = createError(404, 'User not found');
+      return next(errore);
+    }
   } catch (error) {
     next(error);
   }
