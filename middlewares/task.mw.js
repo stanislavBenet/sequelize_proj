@@ -1,3 +1,4 @@
+const createError = require('http-errors');
 const { Task } = require('../models');
 
 module.exports.checkTask = async (req, res, next) => {
@@ -7,7 +8,8 @@ module.exports.checkTask = async (req, res, next) => {
     } = req;
     const taskInstance = await Task.findByPk(idTask);
     if (!taskInstance) {
-      throw new Error('task not found');
+      const errore = createError(404, 'User not found');
+      return next(errore);
     }
     req.taskInstance = taskInstance;
     next();
