@@ -17,7 +17,7 @@ module.exports = {
         field: 'image_path',
         type: Sequelize.TEXT,
       },
-      descriptoin: {
+      description: {
         type: Sequelize.STRING,
       },
       createdAt: {

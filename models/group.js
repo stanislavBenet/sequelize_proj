@@ -28,7 +28,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         field: 'image_path',
       },
-      descriptoin: { type: DataTypes.STRING },
+      description: { type: DataTypes.STRING },
+      isAdult: {
+        field: 'is_adult',
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
     },
     {
       sequelize,

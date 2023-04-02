@@ -5,7 +5,12 @@ const { Group, User } = require('../models');
 module.exports.createUserGroup = async (req, res, next) => {
   try {
     const { body } = req;
-    const values = _.pick(body, ['name', 'imagePath', 'description']);
+    const values = _.pick(body, [
+      'name',
+      'imagePath',
+      'description',
+      'isAdult',
+    ]);
     const group = await Group.create(values);
     if (!group) {
       return next(createError(400, 'bad request'));
@@ -27,12 +32,38 @@ module.exports.getUserGroup = async (req, res, next) => {
       params: { idUser },
     } = req;
     const userWithGroup = await User.findByPk(idUser, {
-      include: [Group],
+      include: {
+        model: Group,
+        through: {
+          attributes: [],
+        },
+      },
     });
     if (!userWithGroup) {
       return next(createError(404, 'user do not have any groups'));
     }
     res.status(200).send({ data: userWithGroup });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.addImageGroup = async (req, res, next) => {
+  try {
+    const {
+      params: { idGroup },
+      file: { filename },
+    } = req;
+    const [rowsCount, [updateGroup]] = await Group.update(
+      { imagePath: filename },
+      {
+        where: {
+          id: idGroup,
+        },
+        returning: true,
+      }
+    );
+    res.status(200).send({ data: updateGroup });
   } catch (error) {
     next(error);
   }

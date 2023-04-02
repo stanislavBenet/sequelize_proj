@@ -1,10 +1,23 @@
 const createError = require('http-errors');
 const { User } = require('../models');
 const { Op } = require('sequelize');
+const _ = require('lodash');
+
+const checkBody = (body) => {
+  _.pick(body, [
+    'firstName',
+    'lastName',
+    'email',
+    'password',
+    'birthday',
+    'isMale',
+  ]);
+};
 
 module.exports.createUser = async (req, res, next) => {
   try {
     const { body } = req;
+    const values = checkBody(body);
     const createdUser = await User.create(body);
     res.status(201).send({ data: createdUser });
     if (!createdUser) {
@@ -34,7 +47,8 @@ module.exports.getAllUsers = async (req, res, next) => {
 module.exports.updateUser = async (req, res, next) => {
   try {
     const { body, userInstance } = req;
-    const updateUser = await userInstance.update(body, {
+    const values = checkBody(body);
+    const updateUser = await userInstance.update(values, {
       returning: true,
     });
     userInstance.password = undefined;
