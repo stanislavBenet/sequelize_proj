@@ -2,16 +2,17 @@ const createError = require('http-errors');
 const _ = require('lodash');
 const { Group, User } = require('../models');
 
+const checkBody = (body) =>
+  _.pick(body, ['name', 'imagePath', 'descriptition', 'isAdult']);
+
 module.exports.createUserGroup = async (req, res, next) => {
   try {
-    const { body } = req;
-    const values = _.pick(body, [
-      'name',
-      'imagePath',
-      'description',
-      'isAdult',
-    ]);
-    const group = await Group.create(values);
+    const {
+      body,
+      file: { filename },
+    } = req;
+    const values = checkBody(body);
+    const group = await Group.create({ ...values, imagePath: filename });
     if (!group) {
       return next(createError(400, 'bad request'));
     }
